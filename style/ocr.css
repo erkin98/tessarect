@@ -10,6 +10,9 @@
 .status {
   min-width: 250px;
 }
+.status.error {
+  color: #b00020;
+}
 #log {
   border: 1px solid #dadada;
   padding: 10px;
@@ -117,6 +120,9 @@ select {
 
 .fa-check{
   color:green;
+}
+.fa-times{
+  color: #b00020;
 }
 
 #log pre {

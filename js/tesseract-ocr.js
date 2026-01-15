@@ -3,7 +3,8 @@ $( document ).ready(function() {
 	Array.prototype.forEach.call( inputs, function( input )
 	{
 		var label	 = input.nextElementSibling,
-			labelVal = label.innerHTML;
+			labelSpan = label.querySelector( 'span' ),
+			labelText = labelSpan ? labelSpan.textContent : label.textContent;
 
 		input.addEventListener( 'change', function( e )
 		{
@@ -14,7 +15,11 @@ $( document ).ready(function() {
 				fileName = e.target.value.split( '\\' ).pop();
 
 			if( fileName ){
-				label.querySelector( 'span' ).innerHTML = fileName;
+				if( labelSpan ){
+					labelSpan.textContent = fileName;
+				}else{
+					label.textContent = fileName;
+				}
 
 				let reader = new FileReader();
 				reader.onload = function () {
@@ -27,14 +32,20 @@ $( document ).ready(function() {
 				startRecognize(file);
 			}
 			else{
-				label.innerHTML = labelVal;
+				if( labelSpan ){
+					labelSpan.textContent = labelText;
+				}else{
+					label.textContent = labelText;
+				}
 				$("#selected-image").attr("src", '');
 				$("#selected-image").removeClass("col-12");
 				$("#arrow-right").addClass("fa-arrow-right");
 				$("#arrow-right").removeClass("fa-check");
+				$("#arrow-right").removeClass("fa-times");
 				$("#arrow-right").removeClass("fa-spinner fa-spin");
 				$("#arrow-down").addClass("fa-arrow-down");
 				$("#arrow-down").removeClass("fa-check");
+				$("#arrow-down").removeClass("fa-times");
 				$("#arrow-down").removeClass("fa-spinner fa-spin");
 				$("#log").empty();
 			}
@@ -52,9 +63,9 @@ $("#startLink").click(function () {
 });
 
 function startRecognize(img){
-	$("#arrow-right").removeClass("fa-arrow-right");
+	$("#arrow-right").removeClass("fa-arrow-right fa-check fa-times");
 	$("#arrow-right").addClass("fa-spinner fa-spin");
-	$("#arrow-down").removeClass("fa-arrow-down");
+	$("#arrow-down").removeClass("fa-arrow-down fa-check fa-times");
 	$("#arrow-down").addClass("fa-spinner fa-spin");
 	recognizeFile(img);
 }
@@ -90,11 +101,28 @@ function progressUpdate(packet){
 			line.innerHTML = ''
 			line.appendChild(pre)
 			$(".fas").removeClass('fa-spinner fa-spin')
+			$(".fas").removeClass('fa-times')
 			$(".fas").addClass('fa-check')
 		}
 
 		log.insertBefore(line, log.firstChild)
 	}
+}
+
+function renderError(message){
+	var log = document.getElementById('log');
+	log.innerHTML = '';
+
+	var line = document.createElement('div');
+	var status = document.createElement('div');
+	status.className = 'status error';
+	status.appendChild(document.createTextNode(message));
+	line.appendChild(status);
+	log.appendChild(line);
+
+	$(".fas").removeClass('fa-spinner fa-spin');
+	$(".fas").removeClass('fa-check');
+	$(".fas").addClass('fa-times');
 }
 
 function recognizeFile(file){
@@ -119,5 +147,12 @@ function recognizeFile(file){
 		.then(function(data){
 			console.log(data)
 			progressUpdate({ status: 'done', data: data })
+		})
+		.catch(function(err){
+			console.error(err);
+			renderError('OCR failed. Please try another image.');
+		})
+		.then(function(){
+			worker.terminate();
 		})
 }

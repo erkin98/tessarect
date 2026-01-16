@@ -1,6 +1,15 @@
+:root {
+  --accent-color: #d3394c;
+  --accent-color-dark: #722040;
+  --border-color: #dadada;
+  --error-color: #b00020;
+  --success-color: #008000;
+  --text-color: #313131;
+}
+
 #log > div {
-  color: #313131;
-  border-top: 1px solid #dadada;
+  color: var(--text-color);
+  border-top: 1px solid var(--border-color);
   padding: 9px;
   display: flex;
 }
@@ -11,15 +20,15 @@
   min-width: 250px;
 }
 .status.error {
-  color: #b00020;
+  color: var(--error-color);
 }
 #log {
-  border: 1px solid #dadada;
+  border: 1px solid var(--border-color);
   padding: 10px;
   min-height: 200px;
 }
 .image-container img{
-  border: 1px solid #dadada;
+  border: 1px solid var(--border-color);
 }
 progress {
   display: block;
@@ -88,13 +97,13 @@ select {
 
 .inputfile-1 + label {
   color: #f1e5e6;
-  background-color: #d3394c;
+  background-color: var(--accent-color);
 }
 
 .inputfile-1:focus + label,
 .inputfile-1.has-focus + label,
 .inputfile-1 + label:hover {
-  background-color: #722040;
+  background-color: var(--accent-color-dark);
 }
 
 #arrow-right ,
@@ -115,14 +124,14 @@ select {
 #arrow-right.fa-spin ,
 #arrow-down.fa-arrow-down ,
 #arrow-down.fa-spin  {
-  color: #d3394c;
+  color: var(--accent-color);
 }
 
 .fa-check{
-  color:green;
+  color: var(--success-color);
 }
 .fa-times{
-  color: #b00020;
+  color: var(--error-color);
 }
 
 #log pre {
